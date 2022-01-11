@@ -4,7 +4,7 @@ const cors = require('cors');
 const db = require('./db');
 
 const server = express();
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 80;
 
 server.use(cors());
 server.use(express.json());
@@ -63,4 +63,6 @@ server.get('/', (request, response) => {
   }
 });
 
-server.listen(port);
+server.listen(port, function () {
+  console.log(`Express: Listening to port ${port}`);
+});
