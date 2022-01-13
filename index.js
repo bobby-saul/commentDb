@@ -26,12 +26,12 @@ server.post('/', (request, response) => {
       response.json({
         status: 200,
         message: 'Successfully added comment.',
-        data: request.body
+        response: res,
       })
     });
   } else {
     response.json({
-      status: 400,
+      status: 403,
       message: 'Invalid API_KEY provided.',
     });
   }
@@ -57,7 +57,7 @@ server.get('/', [], (request, response) => {
     }
   } else {
     response.json({
-      status: 400,
+      status: 403,
       message: 'Invalid API_KEY provided.',
     });
   }
