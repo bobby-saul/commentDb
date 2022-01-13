@@ -2,6 +2,10 @@
 
 This project is for creating an endpoint for accessing a postgres db used for holding data for a commenting system.
 
+TODO:
+- [ ] Document how to set up heroku app
+- [ ] Make an admin portal for approving/deleting comments
+
 ## The database
 
 The table is set up as follows:

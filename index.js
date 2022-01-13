@@ -12,13 +12,13 @@ server.use(express.json());
 // Add a comment
 server.post('/', (request, response) => {
   if (request.get('API_KEY') === process.env.API_KEY) {
-    const path = request.body.path?.trim();
-    const comment = request.body.comment?.trim();
-    const userName = request.body.userName?.trim();
-    const userEmail = request.body.userEmail ? request.body.userEmail?.trim() : null;
+    const path = request.body.path;
+    const comment = request.body.comment;
+    const userName = request.body.userName;
+    const userEmail = request.body.userEmail?.length > 0 ? request.body.userEmail : null;
     const replyId = request.body.replyId ? Number(request.body.replyId) : null;
 
-    db.query(`INSERT INTO ${process.env.TABLE_NAME} (path, comment, user_name, user_email, reply_id) VALUES ('${path}', '${comment}', '${userName}', '${userEmail}', ${replyId});`, (err, res) => {
+    db.query(`INSERT INTO ${process.env.TABLE_NAME}(path, comment, user_name, user_email, reply_id) VALUES($1, $2, $3, $4, $5) RETURNING *;`, [path, comment, userName, userEmail, replyId], (err, res) => {
       if (err) {
         console.error(err);
         throw new Error('Could not properly add comment to database.');
@@ -38,11 +38,11 @@ server.post('/', (request, response) => {
 });
 
 // Get comment for ?path query parameter
-server.get('/', (request, response) => {
+server.get('/', [], (request, response) => {
   if (request.get('API_KEY') === process.env.API_KEY) {
     const path = request.query?.path;
     if (path) {
-      db.query(`SELECT * FROM ${process.env.TABLE_NAME} where path = '${path}'`, (err, res) => {
+      db.query(`SELECT * FROM ${process.env.TABLE_NAME} where path = '${path}' ORDER BY timestamp DESC`, (err, res) => {
         if (err) {
           console.error(err);
           throw new Error('Could not properly get comments.');
